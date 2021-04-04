@@ -1,0 +1,23 @@
+BERCU Mihaela-Bianca 333CB.
+Tema 4 SO
+
+In implementarea planificatorului am decis sa utilizez doua structuri: o structura ce descrie un thread dintr-un planificator si o structura planificator ce retine toate thread-urile si starea prin care acestia trec.
+
+Un element de tip thread (element al structurii thread) va contine statusul sau (new, ready, running, waiting, terminated) notate cu cifre de la 0 la 4, si va contine informatii precum io, prioritatea sa sau timpul.
+
+Planificatorul va retine un pointer catre thread-ul care ruleaza curent (thread_running) si pe tot parcursul functiilor, va verifica constant starea lui. Pentru retinerea thread-urilor exista doua liste/vectori: o coada de prioritate si un vector ce retine toate thread-urile nou pornite.
+
+In so_fork, conform si modelului oferit in enuntul temei, se va crea un nou thread, de initializa o structura de tip thread si se va adauga in planificator.(in vectorul cu noile thread-uri cat si coada de prioritate). 
+La crearea thread-ului, acesta va avea de executat thread_func unde se va astepta rularea handler-ului si imediat dupa acest lucru thread-ul va intra in starea terminated.
+
+Am creat de asemenea si o functie care va verifica constant starea planificatorului - se vor actualiza thread-urile constant si se va verifica daca timpul lor a expirat sau a aparut un thread de o prioritate mai mare.
+
+so_exec are rolul de a decrementa timpul unui thread si in acelasi timp se va apela functia de update al planificatorului.
+
+so_signal - se va trece prin toate thread-urile de tip new si se asigna starea de ready. Se va returna toate thread-urile care au fost de tip new.
+
+Pentru a sincroniza thread-urile si a ajuta planificatorul in rularea thread-urilor , s-au folosit structuri de sincronizare: semafoare. Fiecare thread va trebui sa astepte sa primeasca permisia (to aquire his semaphore) pentru a putea rula handler-ul si acest lucru se va intampla in starea de running.
+
+so_wait - thread-ul va primi starea de waiting.
+
+so_end -- se va astepta mai intai ca toate thread-urile termine de rulat handler-ul propriu, sa intre in starea terminated si apoi se va da un join pentru a se elibera memoria. De asemenea se va distruge si semaforul fiecarui thread.
